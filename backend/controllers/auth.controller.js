@@ -57,3 +57,21 @@ export const login = async (req, res) => {
         res.status(500).json({success: false, message: error.message});
     }
 }
+
+export const me = (req, res) => {
+  const { token } = req.cookies;
+  if (!token) return res.status(401).json({ message: "Nie zalogowany" });
+
+  jwt.verify(token, process.env.JWT_SECRET, {}, async (err, info) => {
+    if (err) return res.status(401).json({ message: "Nieprawidłowy token" });
+
+    try {
+      const user = await User.findById(info.id);
+      if (!user) return res.status(404).json({ message: "Nie znaleziono użytkownika" });
+
+      res.json({ username: user.username });
+    } catch (error) {
+      res.status(500).json({ message: "Błąd serwera" });
+    }
+  });
+};
