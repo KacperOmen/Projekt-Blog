@@ -14,9 +14,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault()
-
       axios.defaults.withCredentials = true;
-
       const {data} = await axios.post(`${AUTH_API_URL}/register`, {username, email, password})
 
       if (data.success) {
@@ -26,7 +24,7 @@ const RegisterPage = () => {
         console.log(data.message)
       }
     } catch (error) {
-      console.log("Błąd")
+      console.log(error.message)
     }
   }
 

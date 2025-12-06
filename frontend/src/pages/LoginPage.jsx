@@ -1,13 +1,30 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useState, useContext } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { AppContext } from "../context/AppContext"
+import axios from "axios"
 
 const LoginPage = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(`Użytkownik zarejestrowany: ${username} ${password}`)
+  const {AUTH_API_URL} = useContext(AppContext)
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault()
+      axios.defaults.withCredentials = true
+      const {data} = await axios.post(`${AUTH_API_URL}/login`, {username, password})
+
+      if (data.success) {
+        navigate("/")
+      }
+      else {
+        console.log(data.message)
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   return (

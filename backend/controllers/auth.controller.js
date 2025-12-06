@@ -1,5 +1,9 @@
 import User from '../models/user.model.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export const register = async (req, res) => {
     try {
@@ -20,5 +24,36 @@ export const register = async (req, res) => {
         return res.status(409).json({success: false, message: "Użytkownik już istnieje"})
     } catch (error) {
         res.status(500).json({success: false, message: error.message})
+    }
+}
+
+export const login = async (req, res) => {
+    try {
+        const {username, password} = req.body
+
+        if (!username || !password) {
+            return res.status(400).json({success: false, message: "Nazwa użytkownika i hasło są wymagane"})
+        }
+
+        const user = await User.findOne({username})
+
+        if (!user) {
+            return res.status(401).json({success: false, message: "Zła nazwa użytkownika lub hasło"});
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (!isMatch) {
+            return res.status(401).json({success: false, message: "Zła nazwa użytkownika lub hasło"});
+        }
+
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '7d'});
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        })
+
+        return res.status(200).json({success: true, user})
+    } catch (error) {
+        res.status(500).json({success: false, message: error.message});
     }
 }
