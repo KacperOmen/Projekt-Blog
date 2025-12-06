@@ -7,13 +7,13 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(`Użytkownik zalogowany: ${username} ${password}`)
+    console.log(`Użytkownik zarejestrowany: ${username} ${password}`)
   }
 
   return (
     <div className="w-full flex justify-center items-center p-8 md:p-12">
         <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-8 rounded-lg border shadow-sm">          
-            <p className="text-center mb-6">
+            <p className="text-center text-xl mb-6">
                 Wprowadź nazwę użytkownika i hasło
             </p>
             <div className="mb-4 flex items-end gap-3">
