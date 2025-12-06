@@ -9,11 +9,11 @@ export const register = async (req, res) => {
             return res.status(400).json({success: false, message: "Brak danych"})
         }
 
-        const existingUser = User.findOne({ $or: [{username}, {email}]})
+        const existingUser = await User.findOne({ $or: [{username}, {email}]})
 
         if (!existingUser) {
             const hashedPassword = await bcrypt.hash(password, 10)
-            User.create({username, email, password: hashedPassword})
+            await User.create({username, email, password: hashedPassword})
             return res.status(200).json({success: true, message: "Rejestracja udana"})
         }
 

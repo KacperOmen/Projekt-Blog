@@ -1,14 +1,33 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useState, useContext } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+import { AppContext } from "../context/AppContext"
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(`Użytkownik zarejestrowany: ${username} ${email} ${password}`)
+  const {AUTH_API_URL} = useContext(AppContext)
+  const navigate = useNavigate()
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault()
+
+      axios.defaults.withCredentials = true;
+
+      const {data} = await axios.post(`${AUTH_API_URL}/register`, {username, email, password})
+
+      if (data.success) {
+        navigate('/login')
+      }
+      else {
+        console.log(data.message)
+      }
+    } catch (error) {
+      console.log("Błąd")
+    }
   }
 
   return (
