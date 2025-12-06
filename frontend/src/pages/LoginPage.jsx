@@ -7,7 +7,7 @@ const LoginPage = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  const {AUTH_API_URL} = useContext(AppContext)
+  const {AUTH_API_URL, setUser} = useContext(AppContext)
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -17,6 +17,7 @@ const LoginPage = () => {
       const {data} = await axios.post(`${AUTH_API_URL}/login`, {username, password})
 
       if (data.success) {
+        setUser(data.user)
         navigate("/")
       }
       else {

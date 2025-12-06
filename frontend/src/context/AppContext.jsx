@@ -1,12 +1,22 @@
-import {createContext} from 'react'
+import {createContext, useState, useEffect} from 'react'
+import axios from 'axios'
 
 export const AppContext = createContext()
 
 const AppContextProvider = (props) => {
   const AUTH_API_URL = "http://localhost:3000/api/auth"
+  const [user, setUser] = useState({})
+
+   useEffect(() => {
+        axios
+            .get(`${AUTH_API_URL}/me`, { withCredentials: true })
+            .then((res) => setUser(res.data.user))
+            .catch(() => setUser(null))
+    }, []);
 
   const value = {
-    AUTH_API_URL
+    AUTH_API_URL,
+    user, setUser
   }
 
   return (

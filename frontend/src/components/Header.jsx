@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom"
-import { useState, useEffect, useContext } from "react"
+import { useEffect, useContext } from "react"
 import { AppContext } from "../context/AppContext"
 import axios from "axios"
 
 const Header = () => {
-  const [username, setUsername]= useState(null);
-
-  const {AUTH_API_URL} = useContext(AppContext)
+  const {AUTH_API_URL, user, setUser} = useContext(AppContext)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -15,21 +13,46 @@ const Header = () => {
           withCredentials: true,
         });
 
-        setUsername(data.username);
+        setUser(data);
       } catch (err) {
         console.error("Nie udało się pobrać użytkownika:", err);
-        setUsername(null);
+        setUser(null);
       }
     };
 
     fetchUser();
   }, [])
 
+  const logout = async (e) => {
+    try {
+      e.preventDefault()
+
+      axios.defaults.withCredentials = true;
+      const {data} = await axios.post(`${AUTH_API_URL}/logout`)
+
+      if (data.success) {
+        setUser(null);
+      }
+      else {
+        console.log(data.message)
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const username = user?.username
+
   return (
     <header className="flex justify-between mx-5 py-5">
         <Link to="/" className="font-bold text-4xl">Mój blog</Link>
         <nav className="flex gap-x-5">
-            {username && <Link to="/create">Stwórz nowy artykuł</Link>}
+            {username && 
+              <>
+                <Link to="/create">Stwórz nowy artykuł</Link>
+                <a onClick={logout}>Wyloguj się</a>
+              </>
+            }
             {!username && 
               <>
                 <Link to="/login" className="text-2xl border rounded-lg px-2">Zaloguj się</Link>
