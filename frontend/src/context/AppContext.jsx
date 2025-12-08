@@ -12,7 +12,7 @@ const AppContextProvider = (props) => {
    useEffect(() => {
         axios
             .get(`${AUTH_API_URL}/me`, { withCredentials: true })
-            .then((res) => setUser(res.data.user))
+            .then((res) => setUser(res.data))
             .catch(() => setUser(null))
     }, []);
 
