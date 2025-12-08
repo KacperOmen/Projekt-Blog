@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import authRouter from './routes/auth.route.js';
+import articleRouter from './routes/article.route.js';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 
@@ -17,6 +18,7 @@ app.use(cors({
 }))
 
 app.use("/api/auth", authRouter)
+app.use("/api/article", articleRouter)
 
 const PORT = process.env.PORT || 3000;
 

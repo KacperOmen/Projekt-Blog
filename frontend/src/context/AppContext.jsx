@@ -5,6 +5,7 @@ export const AppContext = createContext()
 
 const AppContextProvider = (props) => {
   const AUTH_API_URL = "http://localhost:3000/api/auth"
+  const ARTICLE_API_URL = "http://localhost:3000/api/article"
   const [user, setUser] = useState({})
 
    useEffect(() => {
@@ -15,7 +16,7 @@ const AppContextProvider = (props) => {
     }, []);
 
   const value = {
-    AUTH_API_URL,
+    AUTH_API_URL, ARTICLE_API_URL,
     user, setUser
   }
 

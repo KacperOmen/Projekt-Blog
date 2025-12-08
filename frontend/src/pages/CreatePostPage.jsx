@@ -1,26 +1,77 @@
+import { useState, useContext } from "react"
 import ReactQuill from "react-quill-new"
 import 'react-quill-new/dist/quill.snow.css'
+import {AppContext} from '../context/AppContext'
+import {useNavigate} from 'react-router-dom'
+import axios from "axios"
+
+const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, false] }],
+      ['bold', 'italic', 'underline','strike', 'blockquote'],
+      [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+      ['link', 'image'],
+      ['clean']
+    ],
+  }
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'indent',
+    'link', 'image'
+  ]
 
 const CreatePostPage = () => {
+  const [title, setTitle] = useState("")
+  const [summary, setSummary] = useState("")
+  const [content, setContent] = useState("")
+  const [files, setFiles] = useState("")
+
+  const {ARTICLE_API_URL} = useContext(AppContext)
+  const navigate = useNavigate()
+
+  const createNewPost = async (e) => {
+    e.preventDefault()
+
+    const data = new FormData()
+    data.set('title', title)
+    data.set('summary', summary)
+    data.set('content', content)
+    data.set('file', files[0])
+
+    try {
+      const response = await axios.post(`${ARTICLE_API_URL}/post`, data, {withCredentials: true})       
+      navigate("/")
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
     <div>
-        <form>
+        <form onSubmit={createNewPost}>
             <input 
                 type='title' 
                 placeholder='Tytuł'
                 className="border border-gray-400 rouned-sm w-full px-2 mb-2"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
             />
             <input 
                 type='summary' 
                 placeholder='Streszczenie'
                 className="border border-gray-400 rouned-sm w-full px-2 mb-2"
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
             />
             <input 
                 type='file' 
                 className="border border-gray-400 rouned-sm w-full px-2 mb-2"
+                onChange={(e) => setFiles(e.target.files)}
             />
-            <ReactQuill />
-            <button className="rounded-lg px-3 py-1 bg-gray-700 text-white w-full mt-2 cursor-pointer">Stwórz artykuł</button>
+            <ReactQuill value={content} modules={modules} formats={formats} onChange={(newValue) => setContent(newValue)} />
+            <button type="submit" className="rounded-lg px-3 py-1 bg-gray-700 text-white w-full mt-2 cursor-pointer">Stwórz artykuł</button>
         </form>
     </div>
   )
