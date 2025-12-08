@@ -1,4 +1,4 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import ReactQuill from "react-quill-new"
 import 'react-quill-new/dist/quill.snow.css'
 import {AppContext} from '../context/AppContext'
@@ -28,8 +28,14 @@ const CreatePostPage = () => {
   const [content, setContent] = useState("")
   const [files, setFiles] = useState("")
 
-  const {ARTICLE_API_URL} = useContext(AppContext)
+  const {ARTICLE_API_URL, user} = useContext(AppContext)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user === null) {
+      navigate("/login")
+    }
+  }, [user, navigate])
 
   const createNewPost = async (e) => {
     e.preventDefault()
