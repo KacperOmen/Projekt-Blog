@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import Layout from "./layout/Layout"
 import CreatePostPage from "./pages/CreatePostPage"
+import PostPage from "./pages/PostPage"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/create" element={<CreatePostPage />} />
+              <Route path="/post/:id" element={<PostPage />} />
             </Route>           
           </Routes>
         </BrowserRouter>
