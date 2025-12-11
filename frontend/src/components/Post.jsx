@@ -12,7 +12,9 @@ const Post = ({ _id, title, summary, cover, createdAt, author }) => {
           className="md:w-1/3 w-full h-56 md:h-auto overflow-hidden"
         >
           <img 
-            src={`${import.meta.env.VITE_API_URL}${cover}`} 
+            src={cover.startsWith('http')
+                  ? cover
+                  : `${import.meta.env.VITE_API_URL}${cover}`} 
             alt={title}
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           />

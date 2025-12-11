@@ -10,7 +10,7 @@ const modules = {
       [{ 'header': [1, 2, false] }],
       ['bold', 'italic', 'underline','strike', 'blockquote'],
       [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-      ['link', 'image'],
+      ['link'],
       ['clean']
     ],
   }
@@ -19,7 +19,7 @@ const modules = {
     'header',
     'bold', 'italic', 'underline', 'strike', 'blockquote',
     'list', 'indent',
-    'link', 'image'
+    'link'
   ]
 
 const CreatePostPage = () => {
@@ -39,6 +39,11 @@ const CreatePostPage = () => {
 
   const createNewPost = async (e) => {
     e.preventDefault()
+
+    if (!files) {
+      alert("Dodaj plik");
+      return;
+    }
 
     if (!content || content.replace(/<(.|\n)*?>/g, '').trim().length === 0) {
       alert("Wpisz treść artykułu");
@@ -85,7 +90,6 @@ const CreatePostPage = () => {
                   id="fileInput"
                   className="hidden"
                   onChange={(e) => setFiles(e.target.files)}
-                  required
               />
               <label
                 htmlFor="fileInput"

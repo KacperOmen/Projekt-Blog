@@ -82,9 +82,11 @@ const PostPage = () => {
         Autor: <span className="font-semibold">{postInfo.author.username}</span> |{" "}
         {format(postInfo.createdAt, "d MMMM yyyy HH:mm", { locale: pl })}
       </p>
-
+      
       <img
-        src={import.meta.env.VITE_API_URL + postInfo.cover}
+        src={postInfo.cover.startsWith('http')
+              ? postInfo.cover
+              : `${import.meta.env.VITE_API_URL}${postInfo.cover}`}
         alt=""
         className="w-full max-h-[500px] object-contain rounded-lg mb-8"
       />

@@ -10,12 +10,6 @@ export const post = async (req, res) => {
       return res.status(400).json({ message: "Zdjęcie jest wymagane" });
     }
 
-    const {originalname, path} = req.file
-    const parts = originalname.split('.')
-    const ext = parts[parts.length - 1]
-    const newPath = path + '.' + ext
-    fs.renameSync(path, newPath)
-
     const { token } = req.cookies;
 
     const {title, summary, content} = req.body
@@ -36,16 +30,31 @@ export const post = async (req, res) => {
         if (err) return res.status(401).json({ message: "Nieprawidłowy token" });
     
         try {
+          let coverPath
+
+          if (process.env.NODE_ENV === 'production') {
+            coverPath = req.file.path
+          }
+          else {
+            const {originalname, path} = req.file
+            const parts = originalname.split('.')
+            const ext = parts[parts.length - 1]
+            const newPath = path + '.' + ext
+            fs.renameSync(path, newPath)
+            coverPath = newPath
+          }
+
           const postDoc = await Post.create({
             title,
             summary,
             content,
-            cover: newPath,
+            cover: coverPath,
             author: info.id,
           })  
 
           res.json(postDoc);
         } catch (error) {
+          console.log(error)
           res.status(500).json({ message: "Błąd serwera" });
         }
       });
