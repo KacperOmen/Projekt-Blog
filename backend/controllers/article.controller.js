@@ -6,6 +6,10 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const post = async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "Zdjęcie jest wymagane" });
+    }
+
     const {originalname, path} = req.file
     const parts = originalname.split('.')
     const ext = parts[parts.length - 1]
@@ -15,6 +19,19 @@ export const post = async (req, res) => {
     const { token } = req.cookies;
 
     const {title, summary, content} = req.body
+
+    if (!title) {
+      return res.status(400).json({ message: "Tytuł jest wymagany" });
+    }
+
+    if (!summary) {
+      return res.status(400).json({ message: "Streszczenie jest wymagane" });
+    }
+
+    if (!content || content.replace(/<(.|\n)*?>/g, "").trim().length === 0) {
+      return res.status(400).json({ message: "Treść artykułu nie może być pusta" });
+    }
+
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, info) => {
         if (err) return res.status(401).json({ message: "Nieprawidłowy token" });
     
