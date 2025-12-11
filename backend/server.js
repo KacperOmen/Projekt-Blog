@@ -14,7 +14,7 @@ app.use('/uploads', express.static('uploads'))
 
 dotenv.config()
 
-const allowedOrigins = ["http://localhost:5173", "https://projekt-blog-kacper-omen-backend.onrender.com"]
+const allowedOrigins = ["http://localhost:5173", "https://projekt-blog-kacper-omen.onrender.com"]
 
 app.use(cors({
     origin: allowedOrigins,
