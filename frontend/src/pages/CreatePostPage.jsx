@@ -40,6 +40,11 @@ const CreatePostPage = () => {
   const createNewPost = async (e) => {
     e.preventDefault()
 
+    if (!content || content.replace(/<(.|\n)*?>/g, '').trim().length === 0) {
+      alert("Wpisz treść artykułu");
+      return;
+    }
+
     const data = new FormData()
     data.set('title', title)
     data.set('summary', summary)
@@ -63,6 +68,7 @@ const CreatePostPage = () => {
                 className="border border-gray-400 rouned-sm w-full px-2 mb-2"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
             />
             <input 
                 type='summary' 
@@ -70,12 +76,29 @@ const CreatePostPage = () => {
                 className="border border-gray-400 rouned-sm w-full px-2 mb-2"
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
+                required
             />
-            <input 
-                type='file' 
-                className="border border-gray-400 rouned-sm w-full px-2 mb-2"
-                onChange={(e) => setFiles(e.target.files)}
-            />
+            <div className="mb-2">
+              <input 
+                  type='file' 
+                  accept="image/*"
+                  id="fileInput"
+                  className="hidden"
+                  onChange={(e) => setFiles(e.target.files)}
+                  required
+              />
+              <label
+                htmlFor="fileInput"
+                className="cursor-pointer border border-gray-400 rounded-sm px-3 py-2 inline-block"
+              >
+                Wybierz zdjęcie
+              </label>
+              {files && files[0] && (
+                <p className="text-sm text-gray-600 mt-1">
+                  Wybrano: {files[0].name}
+                </p>
+              )}
+            </div>
             <ReactQuill value={content} modules={modules} formats={formats} onChange={(newValue) => setContent(newValue)} />
             <button type="submit" className="rounded-lg px-3 py-1 bg-gray-700 text-white w-full mt-2 cursor-pointer">Stwórz artykuł</button>
         </form>
