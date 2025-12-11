@@ -84,9 +84,9 @@ const PostPage = () => {
       </p>
 
       <img
-        src={"http://localhost:3000/" + postInfo.cover}
+        src={import.meta.env.VITE_API_URL + postInfo.cover}
         alt=""
-        className="w-full max-h-[500px] object-cover rounded-lg mb-8"
+        className="w-full max-h-[500px] object-contain rounded-lg mb-8"
       />
 
       <div

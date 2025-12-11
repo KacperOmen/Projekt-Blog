@@ -4,9 +4,9 @@ import axios from 'axios'
 export const AppContext = createContext()
 
 const AppContextProvider = (props) => {
-  const AUTH_API_URL = "http://localhost:3000/api/auth"
-  const ARTICLE_API_URL = "http://localhost:3000/api/article"
-  const COMMENT_API_URL = "http://localhost:3000/api/comment"
+  const AUTH_API_URL = import.meta.env.VITE_API_URL + "api/auth"
+  const ARTICLE_API_URL = import.meta.env.VITE_API_URL + "api/article"
+  const COMMENT_API_URL = import.meta.env.VITE_API_URL + "api/comment"
   const [user, setUser] = useState({})
 
    useEffect(() => {
