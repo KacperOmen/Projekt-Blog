@@ -6,13 +6,16 @@ import axios from "axios"
 const LoginPage = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [errorMsg, setErrorMsg] = useState("")
 
   const {AUTH_API_URL, setUser} = useContext(AppContext)
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMsg("")
+
     try {
-      e.preventDefault()
       axios.defaults.withCredentials = true
       const {data} = await axios.post(`${AUTH_API_URL}/login`, {username, password})
 
@@ -21,10 +24,14 @@ const LoginPage = () => {
         navigate("/")
       }
       else {
-        console.log(data.message)
+        setErrorMsg(data.message)
       }
     } catch (error) {
-      console.log(error.message)
+      if (error.response?.data?.message) {
+        setErrorMsg(error.response.data.message)
+      } else {
+        setErrorMsg("Błąd serwera. Spróbuj ponownie.")
+      }
     }
   }
 
@@ -34,6 +41,10 @@ const LoginPage = () => {
             <p className="text-center text-xl mb-6">
                 Wprowadź nazwę użytkownika i hasło
             </p>
+            {errorMsg && (
+              <p className="text-red-600 text-center mb-4">{errorMsg}</p>
+            )}
+            
             <div className="mb-4 flex items-end gap-3">
                 <label htmlFor="username" className="block text-lg mb-2 whitespace-nowrap">Login</label>
                 <input 

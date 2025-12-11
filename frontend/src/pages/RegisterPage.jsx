@@ -7,13 +7,16 @@ const RegisterPage = () => {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [errorMsg, setErrorMsg] = useState("")
 
   const {AUTH_API_URL} = useContext(AppContext)
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMsg("")
+
     try {
-      e.preventDefault()
       axios.defaults.withCredentials = true;
       const {data} = await axios.post(`${AUTH_API_URL}/register`, {username, email, password})
 
@@ -21,10 +24,14 @@ const RegisterPage = () => {
         navigate('/login')
       }
       else {
-        console.log(data.message)
+        setErrorMsg(data.message)
       }
     } catch (error) {
-      console.log(error.message)
+      if (error.response?.data?.message) {
+        setErrorMsg(error.response.data.message)
+      } else {
+        setErrorMsg("Błąd serwera. Spróbuj ponownie.")
+      }
     }
   }
 
@@ -34,6 +41,10 @@ const RegisterPage = () => {
             <p className="text-center text-2xl mb-6">
                 Załóż konto
             </p>
+            {errorMsg && (
+              <p className="text-red-600 text-center mb-4">{errorMsg}</p>
+            )}
+            
             <div className="mb-4 flex items-end gap-3">
                 <label htmlFor="username" className="block text-lg mb-2 whitespace-nowrap">Login</label>
                 <input 
@@ -44,6 +55,7 @@ const RegisterPage = () => {
                     className="border w-full p-2 rounded" 
                     placeholder="Wprowadź nazwę użytkownika"
                     required
+                    minLength={3}
                 />
             </div>
             <div className="mb-4 flex items-end gap-3">
@@ -68,6 +80,7 @@ const RegisterPage = () => {
                     className="border w-full p-2 rounded" 
                     placeholder="Wprowadź hasło"
                     required
+                    minLength={6}
                 />
             </div>
             <button type="submit" className="w-full bg-black text-white p-2 rounded-lg hover:bg-gray-700 transition">
